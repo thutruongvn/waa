@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Books</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}" href="../css/main.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+          crossorigin="anonymous">
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script type="text/javascript" th:src="@{/js/ajax.js}"></script>
+</head>
+<body>
+
+<h1>Book list</h1>
+
+<table class="table table-bordered" id="tblBooks">
+    <tr>
+        <th>#</th>
+        <th>ISBN</th>
+        <th>TITLE</th>
+        <th>AUTHOR</th>
+        <th>CATEGORIES</th>
+        <th></th>
+    </tr>
+    <tr th:each="book : ${books}">
+        <td th:text="${book.id}">No.</td>
+        <td th:text="${book.isbn}">ISBN</td>
+        <td th:text="${book.title}">TITLE</td>
+        <td th:text="${book.author}">AUTHOR</td>
+        <td th:text="${book.categoryList}">CATEGORIES</td>
+        <td ><a th:href="@{'/book_details/' + ${book.id}}">View</a></td>
+    </tr>
+</table>
+
+
+<h2>Book Input Form</h2>
+<form th:object="${book}" method="post" th:action="@{/book_save}" id="bookForm">
+    <legend><span th:text="#{book.form.title}">Add an Employee</span></legend>
+    <ul th:if="${#fields.hasErrors('*')}" class="error">
+        <li th:each="err : ${#fields.errors('*')}" th:text="${err}" >Input
+            is incorrect</li>
+    </ul>
+    <div class="error" id="errors" ></div>
+    <p>ISBN: <input th:field="*{isbn}"></p>
+    <p>Title: <input th:field="*{title}"></p>
+    <p>Author: <input th:field="*{author}"></p>
+    <p>Category:
+    <select id="categoryList" th:field="*{categoryList}" multiple="multiple">
+        <option
+                th:each="cat: ${categories}"
+                th:value="${cat.id}"
+                th:text="${cat.name}" ></option>
+    </select></p>
+    <input type="submit" value="Submit book">
+    <br/>
+    <input type="button" id="btnAddBook" value="Add book">
+</form>
+</body>
+</html>
